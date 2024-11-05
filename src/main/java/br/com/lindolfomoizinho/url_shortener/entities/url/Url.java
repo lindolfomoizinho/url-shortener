@@ -4,7 +4,9 @@ import br.com.lindolfomoizinho.url_shortener.entities.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -24,6 +26,8 @@ public class Url {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @CreationTimestamp
+    private Instant createdAt;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

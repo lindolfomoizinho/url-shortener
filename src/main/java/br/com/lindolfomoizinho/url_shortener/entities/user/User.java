@@ -1,10 +1,13 @@
 package br.com.lindolfomoizinho.url_shortener.entities.user;
 
+import br.com.lindolfomoizinho.url_shortener.controllers.user.dtos.LoginRequest;
 import br.com.lindolfomoizinho.url_shortener.entities.url.Url;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,4 +37,9 @@ public class User {
     )
     @NotEmpty
     private Set<Role> roles;
+
+
+    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequest.password(), this.password);
+    }
 }
