@@ -8,17 +8,14 @@ import java.util.Optional;
 
 @Service
 public class RoleService {
-    private final RoleRepository repository;
-
-    public RoleService(RoleRepository repository) {
-        this.repository = repository;
+    private final RoleRepository roleRepository;
+    public RoleService(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
-
     public Role findRoleByName(String name){
-        return repository.findByName(name);
+        return roleRepository.findByName(name);
     }
-
     public Optional<Role> findRoleById(Long roleId) {
-        return repository.findById(roleId);
+        return roleRepository.findById(roleId);
     }
 }

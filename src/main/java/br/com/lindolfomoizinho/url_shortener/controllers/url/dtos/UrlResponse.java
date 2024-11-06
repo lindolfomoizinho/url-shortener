@@ -9,5 +9,4 @@ public record UrlResponse(
         String originalUrl,
         UUID userId,
         Instant createdAt
-) {
-}
+) { }

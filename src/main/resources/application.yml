@@ -1,6 +1,7 @@
 spring:
   application:
     name: url-shortener
+
   datasource:
     url: jdbc:postgresql://postgres:5432/url-shortener-db
     username: root
@@ -19,6 +20,13 @@ spring:
       mode: always
 jwt:
   public:
-    key: classpath:task-manager.pub
+    key: classpath:app.pub
   private:
-    key: classpath:task-manager.key
+    key: classpath:app.key
+  issuer: task-manager
+  expires-in: 300
+
+admin:
+  credentials:
+    username: admin
+    password: admin

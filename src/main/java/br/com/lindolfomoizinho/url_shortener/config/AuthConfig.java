@@ -1,10 +1,8 @@
 package br.com.lindolfomoizinho.url_shortener.config;
 
-import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,8 +26,10 @@ import java.security.interfaces.RSAPublicKey;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class AuthConfig {
+
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
+
     @Value("${jwt.private.key}")
     private RSAPrivateKey privateKey;
 
@@ -39,8 +39,9 @@ public class AuthConfig {
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/v1/user/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/user/signup").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/**").permitAll()
                         .anyRequest().authenticated())
-                .csrf(csrf -> csrf.disable()) //TODO enable in prod
+                .csrf(csrf -> csrf.disable())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -54,8 +55,8 @@ public class AuthConfig {
 
     @Bean
     public JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(privateKey).build();
-        ImmutableJWKSet<SecurityContext> jwkSet = new ImmutableJWKSet<>(new JWKSet(jwk));
+        var jwk = new RSAKey.Builder(this.publicKey).privateKey(privateKey).build();
+        var jwkSet = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwkSet);
     }
 
@@ -63,5 +64,4 @@ public class AuthConfig {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

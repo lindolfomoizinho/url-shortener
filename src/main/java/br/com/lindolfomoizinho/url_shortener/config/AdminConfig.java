@@ -1,35 +1,28 @@
 package br.com.lindolfomoizinho.url_shortener.config;
 
-import br.com.lindolfomoizinho.url_shortener.controllers.user.dtos.SignupRequest;
-import br.com.lindolfomoizinho.url_shortener.entities.user.Role;
-import br.com.lindolfomoizinho.url_shortener.services.SignupService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import br.com.lindolfomoizinho.url_shortener.services.AdminService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
 @Configuration
 public class AdminConfig implements CommandLineRunner {
-    private final SignupService signupService;
-    private static final Logger logger = LoggerFactory.getLogger(AdminConfig.class);
+    private final AdminService adminService;
 
-    public AdminConfig(SignupService signupService) {
-        this.signupService = signupService;
+    @Value("${admin.credentials.username}")
+    private String username;
+
+    @Value("${admin.credentials.password}")
+    private String password;
+
+    public AdminConfig(AdminService adminService) {
+        this.adminService = adminService;
     }
 
     @Override
     @Transactional
     public void run(String... args) {
-        try {
-            signupService.signup(
-                    new SignupRequest( "admin", "123"),
-                    Set.of(Role.Values.ADMIN, Role.Values.BASIC)
-            );
-            logger.info("Admin user created successfully.");
-        } catch (RuntimeException e) {
-            logger.info("Admin already exists.");
-        }
+        adminService.createAdminIfNotExist(username, password);
     }
 }

@@ -10,21 +10,17 @@ import java.util.UUID;
 
 @Service
 public class UserService {
-    private final UserRepository repository;
-
-    public UserService(UserRepository repository) {
-        this.repository = repository;
+    private final UserRepository userRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
-
     public Optional<User> findByUsername(String username) {
-        return repository.findByUsername(username);
+        return userRepository.findByUsername(username);
     }
-
     public void save(User user) {
-        repository.save(user);
+        userRepository.save(user);
     }
-
     public Optional<User> findById(UUID uuid) {
-        return repository.findById(uuid);
+        return userRepository.findById(uuid);
     }
 }
